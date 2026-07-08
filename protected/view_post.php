@@ -1,12 +1,16 @@
 <?php
+ini_set('display_errors',1);
 require '../authentication/db.php';
 require '../authentication/session_check.php';
 session_check();
 $id = $_GET['id'];
 
-$post_data_query = "select * from post where id = '$id'";
-$post_data_set = mysqli_query($db_conn,$post_data_query);
-$post_data_arr = mysqli_fetch_assoc($post_data_set);
+$post_data_query = "select * from post where id = ?";
+$stmt = $db_conn_prepared->prepare($post_data_query); 
+$stmt->bind_param("s",$id);
+$stmt->execute();
+$post_data_set = $stmt->get_result();
+$post_data_arr = $post_data_set->fetch_assoc();
 ?>
 
 <fieldset>
@@ -16,7 +20,7 @@ $post_data_arr = mysqli_fetch_assoc($post_data_set);
 </p>
 </fieldset>
 
-<a href = "post.php">Back to post page</a><br>
+<a href = "prepared_post.php">Back to post page</a><br>
 <?php
 if($_SESSION['user'] == $post_data_arr['user']): ?>
     <a href = "../authentication/delete_post.php?id=<?php echo $id ?>">DELETE</a>

@@ -1,5 +1,4 @@
 <?php
-ini_set('display_errors',1);
 require '../authentication/db.php';
 require '../authentication/session_check.php';
 session_check();
@@ -14,9 +13,9 @@ if(!in_array($sort,$whitelist)){
     $sort="id";
 }
 
-// if(!in_array($search_field,$whitelist)){
-//     $search_field="title";
-// }
+if(!in_array($search_field,$whitelist)){
+    $search_field="title";
+}
 
 if($search_field == "id"){
     $content_list_query = "select * from post where $search_field = ? order by $sort desc";

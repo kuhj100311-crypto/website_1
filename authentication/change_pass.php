@@ -1,4 +1,4 @@
-<?php
+<?php #commit: prepared statement applied
 include 'db.php';
 session_start();
 $user = $_SESSION['user'];
@@ -9,12 +9,17 @@ $new_pass_hash = hash('sha256',$new_pass);
 $old_pass_query = "
         SELECT * 
         from account_info
-        where PW = '$old_pass' and ID = '$user'
+        where PW = ? and ID = ?
         ";
-$result = mysqli_query($db_conn,$old_pass_query);
-$old_pass_check = mysqli_num_rows($result);
 
-if(!$old_pass_check){
+$stmt = $db_conn_prepared->prepare($old_pass_query);
+$stmt->bind_param("ss",$old_pass,$user);
+$stmt->execute();
+
+$result_set = $stmt->get_result();
+$result_arr_old = $result_set->fetch_assoc();
+
+if(!$result_arr_old){
     echo "<script> alert('Wrong Password. Try Again.');</script>";
     echo "<script>location.href='../protected/my_page.php';</script>";
     exit();
@@ -26,10 +31,13 @@ if(!$old_pass_check){
 
 $new_pass_query = "
     UPDATE account_info
-    SET PW='$new_pass' , PASS_HASH='$new_pass_hash' 
-    WHERE ID='$user'
+    SET PW=? , PASS_HASH=? 
+    WHERE ID=?
 ";
-mysqli_query($db_conn,$new_pass_query);
+
+$stmt = $db_conn_prepared->prepare($new_pass_query);
+$stmt->bind_param("sss",$new_pass,$new_pass_hash,$user);
+$stmt->execute();
 echo "<script> alert('Password Changed!');</script>";
 echo "<script>location.href='../protected/home.php';</script>";
 exit();

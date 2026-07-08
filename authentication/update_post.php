@@ -7,15 +7,16 @@ $id = $_GET['id'];
 $title = $_POST['title'];
 $content = $_POST['content'];
 
-echo $id,$title,$content;
 $post_update_query = "
 UPDATE post
-SET title = '$title' , content = '$content'
-WHERE id = '$id'
+SET title = ? , content = ?
+WHERE id = ?
 ";
 
-mysqli_query($db_conn,$post_update_query);
+$stmt = $db_conn_prepared->prepare($post_update_query);
+$stmt->bind_param("sss",$title,$content,$id);
+$stmt->execute();
 
 echo "<script> alert('Edit Complete');</script>";
-echo "<script>location.href='../protected/post.php';</script>";
+echo "<script>location.href='../protected/prepared_post.php';</script>";
 ?>

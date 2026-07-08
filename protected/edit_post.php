@@ -4,13 +4,17 @@ require '../authentication/session_check.php';
 session_check();
 $id = $_GET['id'];
 
-$post_data_query = "SELECT * FROM `post` where id = '$id'";
-$post_data_set = mysqli_query($db_conn,$post_data_query);
-$post_data_arr = mysqli_fetch_assoc($post_data_set);
-$post_data_rows = mysqli_num_rows($post_data_set);
+$post_data_query = "SELECT * FROM `post` where id = ?";
+$stmt = $db_conn_prepared->prepare($post_data_query);
+$stmt->bind_param("s",$id);
+$stmt->execute(); 
+$post_data_result = $stmt->get_result();
+$post_data_arr = $post_data_result->fetch_assoc();
+$post_data_rows = mysqli_num_rows($post_data_result);
+
 if(!$id || !$post_data_rows){
     echo "<script> alert('Cannot Find Posts by that id.');</script>";
-    echo "<script>location.href='./post.php';</script>";
+    echo "<script>location.href='./prepared_post.php';</script>";
 }
 
 $title = $post_data_arr['title'];

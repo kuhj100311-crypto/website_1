@@ -1,5 +1,4 @@
 <?php
-ini_set('display_errors',1);
 require '../authentication/db.php';
 require '../authentication/session_check.php';
 session_check();
@@ -13,5 +12,5 @@ $stmt->execute();
 #mysqli_query($db_conn,$delete_post_query);
 
 echo "<script> alert('Delete Complete.');</script>";
-echo "<script>location.href='../protected/post.php';</script>";
+echo "<script>location.href='../protected/prepared_post.php';</script>";
 ?>

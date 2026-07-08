@@ -5,8 +5,11 @@ $pass = $_POST['password'];
 $name = $_POST['realname'];
 $pass_hash = hash('sha256',$pass);
 
-$dupe_check_query = "select ID from account_info where ID = '$user'";
-$dupe_result = mysqli_query($db_conn,$dupe_check_query);
+$dupe_check_query = "select ID from account_info where ID = ?";
+$stmt = $db_conn_prepared->prepare($dupe_check_query);
+$stmt->bind_param("s",$user);
+$stmt->execute();
+$dupe_result = $stmt->get_result();
 $dupe_flag = mysqli_num_rows($dupe_result);
 
 if($dupe_flag){
@@ -21,8 +24,11 @@ if(mb_strlen($user) > 12 || mb_strlen($pass) > 12){
     exit();
 }
 
-$register_data_query = "INSERT INTO `account_info` (`Name`, `ID`, `PW`,`PASS_HASH`) VALUES ('$name', '$user', '$pass','$pass_hash')";
-mysqli_query($db_conn,$register_data_query);
+$register_data_query = "INSERT INTO `account_info` (`Name`, `ID`, `PW`,`PASS_HASH`) VALUES (?,?,?,?)";
+
+$stmt = $db_conn_prepared->prepare($register_data_query);
+$stmt->bind_param("ssss",$name,$user,$pass,$pass_hash);
+$stmt->execute();
 echo "<script> alert('Register Succeed!');</script>";
 echo "<script>location.href='../index.html';</script>";
 ?>

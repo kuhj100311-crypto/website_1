@@ -1,5 +1,4 @@
 <?php
-ini_set('display_errors',1);
 require '../authentication/db.php';
 require '../authentication/session_check.php';
 session_check();
@@ -19,8 +18,11 @@ $date = date("y-m-d");
     exit();
 }
 
-$query = "INSERT INTO `post` (`user`,`title`,`content`,`date`) values ('$user','$title','$content','$date')";
-mysqli_query($db_conn,$query);
+$query = "INSERT INTO `post` (`user`,`title`,`content`,`date`) values (?,?,?,?)";
+$stmt = $db_conn_prepared->prepare($query);
+$stmt->bind_param("ssss",$user,$title,$content,$date);
+$stmt->execute();
+
 echo "<script> alert('Upload Complete!');</script>";
-echo "<script>location.href='../protected/post.php';</script>";
+echo "<script>location.href='../protected/prepared_post.php';</script>";
 ?>
