@@ -4,6 +4,7 @@ require '../authentication/session_check.php';
 session_check();
 
 $search_text = isset($_GET['search_text']) ? $_GET['search_text'] : '';
+$search_text_display = $search_text;
 
 $whitelist = ["title","user","date","id"];
 $sort = isset($_GET['sort']) ? $_GET['sort'] : 'id';
@@ -24,7 +25,6 @@ if($search_field == "id"){
     $search_text = '%'.$search_text.'%';
 }
 
-echo $content_list_query;
 $stmt = $db_conn_prepared->prepare($content_list_query);
 $stmt->bind_param('s',$search_text);
 $stmt->execute();
@@ -38,7 +38,8 @@ $query_result_set=$stmt->get_result();
 </head>
 
 <body>
-    <h1>Prepared Posts</h1>
+    <h1><a href="home.php">Umbrella Cafe</a></h1>
+    <h2>Prepared Posts</h2>
     <form action = "./prepared_post.php" method = "get">
         <input type = "text" name="search_text" placeholder="Search here">
 
@@ -61,7 +62,7 @@ $query_result_set=$stmt->get_result();
     </form>
 
 <fieldset>
-    Searched Text: <?=$search_text?>
+    Searched Text: <?=$search_text_display?>
 <table border="1">
     <tr>
         <th>ID</th><th>TITLE</th><th>WRITER</th><th>UPLOAD DATE</th>
@@ -76,7 +77,6 @@ $query_result_set=$stmt->get_result();
     <?php endwhile; ?>
 </table>
 </fieldset>
-<a href = "home.php">back to home</a><br>
 <a href = 'write.php'>Write Posts</a>
 </body>
 </html>

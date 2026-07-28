@@ -1,15 +1,12 @@
 <?php
-session_start();
-if(!$_SESSION['login_flag']){
-    echo "<script> alert('You need to be logged in to view this site.');</script>";
-    echo "<script>location.href='../index.html';</script>";
-}
+require '../authentication/db.php';
+require '../authentication/session_check.php';
+session_check();
 ?>
 
-<h2>Hello, <?=$_SESSION['user']?></h2>
+<h1>Umbrella Cafe</h1>
 <fieldset>
-    Menu:<br>
-    <a href = "prepared_post.php">View Posts</a><br>
-    <a href = 'my_page.php'>MY PAGE</a><br>
-    <a href = '../authentication/logout.php'>LOG OUT</a><br>
+    <a href = "prepared_post.php">새 게시글 보러가기</a><br>
+    <a href = 'my_page.php?latest_login=<?php echo date('y-m-d H:i:s',time())?>'>마이페이지</a><br>
+    <a href = '../authentication/logout.php'>로그 아웃</a><br>
 </fieldset>

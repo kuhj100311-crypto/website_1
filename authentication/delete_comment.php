@@ -1,5 +1,4 @@
 <?php
-ini_set('display_errors',1);
 require '../authentication/db.php';
 require '../authentication/session_check.php';
 session_check();
@@ -13,5 +12,5 @@ $stmt->bind_param('i',$comment_id);
 $stmt->execute();
 
 echo "<script> alert('Comment deleted!');</script>";
-echo "<script>location.href='../protected/view_post.php?id=".$post_id."';</script>";
+echo "<script>location.href='../protected/view_post.php?id=$post_id';</script>";
 ?>
