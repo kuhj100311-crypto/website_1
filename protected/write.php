@@ -12,7 +12,7 @@ session_check();
 </head>
 <body>
     <h1>Write & Upload</h1>
-    <form action = "../authentication/write_check.php" method = "post">
+    <form action = "../authentication/write_check.php" method = "post" enctype="multipart/form-data">
         <table width = 800 border = "1">
             <tr>
                 <th>Title</th>
@@ -21,6 +21,10 @@ session_check();
             <tr>
                 <th>Contents</th>
                 <td><textarea name = "content" style = "height: 500px; width:100%"></textarea></td>
+            </tr>
+            <tr>
+                <th>Files</th>
+                <td><input type="file" name="upload_file" value='0' accept=".txt"></td>
             </tr>
             <tr>
                 <td colspan="2" align = "right"><button type = "submit">SAVE and UPLOAD</button></td>

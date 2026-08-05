@@ -5,6 +5,15 @@ require '../authentication/session_check.php';
 session_check();
 $id = $_GET['id'];
 
+//조회수 체크 기능
+if(!isset($_SESSION['post_view'.$id])){ //사용자가 이번 로그인 세션에서 해당 글을 방문한 적이 없는 경우
+    $_SESSION['post_view'.$id] = true;
+    $post_view_increase_query = "UPDATE post SET post_view = post_view + 1 WHERE id = ?";
+    $stmt = $db_conn_prepared->prepare($post_view_increase_query);
+    $stmt->bind_param('i',$id);
+    $stmt->execute();
+}
+
 //fetching post data from db
 $post_data_query = "select * from post where id = ?";
 $stmt = $db_conn_prepared->prepare($post_data_query); 
@@ -23,8 +32,16 @@ $comment_data_set=$stmt->get_result();
 
 <fieldset> <!--show post contents-->
 <h1><?php echo $post_data_arr['title']?></h1>
+<h3>writer: <?=$post_data_arr['user']?></h3>
 <p>
-    <?php echo nl2br($post_data_arr['content']) ?>
+    <fieldset><legend>contents</legend>
+        <?php echo nl2br($post_data_arr['content']) ?>
+    </fieldset>
+    <?php
+    if($post_data_arr['files'] != 'none'):?>
+    Files: <a href="./uploads/<?=$post_data_arr['files']?>"><?=$post_data_arr['files']?></a>
+    <?php endif; ?>
+    
 </p>
 </fieldset>
 

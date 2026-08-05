@@ -1,4 +1,5 @@
 <?php
+ini_set('display_errors',1);
 require '../authentication/db.php';
 require '../authentication/session_check.php';
 session_check();
@@ -19,6 +20,8 @@ if(!$id || !$post_data_rows){
 
 $title = $post_data_arr['title'];
 $content = $post_data_arr['content'];
+$file = $post_data_arr['files'];
+
 ?>
 
 <head>
@@ -28,7 +31,7 @@ $content = $post_data_arr['content'];
 </head>
 <body>
     <h1>Edit & Upload</h1>
-    <form action = "../authentication/update_post.php?id=<?=$id?>" method = "post">
+    <form action = "../authentication/update_post.php?id=<?=$id?>" method = "post" enctype="multipart/form-data">
         <table width = 800 border = "1">
             <tr>
                 <th>Title</th>
@@ -39,6 +42,10 @@ $content = $post_data_arr['content'];
                 <td><textarea name = "content" style = "height: 500px; width:100%"><?=$content?></textarea></td>
             </tr>
             <tr>
+                <th>Files:</th>
+                <?php prev_file_check() ?>
+            </tr>
+            <tr>
                 <td colspan="2" align = "right"><button type = "submit">EDIT AND UPLOAD</button></td>
             </tr>
         </table>
@@ -46,3 +53,14 @@ $content = $post_data_arr['content'];
     <a href = "./view_post.php?id=<?=$id?>">Cancel</a>
 </body>
 </html>
+
+<?php
+    function prev_file_check(){
+        global $file;
+        if($file == 'none'){
+            echo "<td><input type='file' name='upload_file' value='0' accept='.txt'></td>";
+        }else{
+            echo "<td>".$file."  <input type='file' name='upload_file' value='0' accept='.txt'></td>";
+        }
+    }
+?>

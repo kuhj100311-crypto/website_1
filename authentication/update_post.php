@@ -9,12 +9,21 @@ $content = $_POST['content'];
 
 $post_update_query = "
 UPDATE post
-SET title = ? , content = ?
+SET title = ? , content = ?, files = ?
 WHERE id = ?
 ";
 
+//파일 업로드 여부 확인
+if(($_FILES['upload_file']['name']) != ''){
+    $tmpfile = $_FILES['upload_file']['tmp_name'];
+    $true_file_name = $_FILES['upload_file']['name'];
+    $save_folder = "../protected/uploads/".$true_file_name;
+    move_uploaded_file($tmpfile,$save_folder);
+}else{
+    $true_file_name = 'none';
+}
 $stmt = $db_conn_prepared->prepare($post_update_query);
-$stmt->bind_param("sss",$title,$content,$id);
+$stmt->bind_param("ssss",$title,$content,$true_file_name,$id);
 $stmt->execute();
 
 echo "<script> alert('Edit Complete');</script>";

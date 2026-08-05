@@ -65,7 +65,7 @@ $query_result_set=$stmt->get_result();
     Searched Text: <?=$search_text_display?>
 <table border="1">
     <tr>
-        <th>ID</th><th>TITLE</th><th>WRITER</th><th>UPLOAD DATE</th>
+        <th>ID</th><th>TITLE</th><th>WRITER</th><th>UPLOAD DATE</th><th>VIEWS</th>
     </tr>
     <?php while($row = mysqli_fetch_assoc($query_result_set)): ?>
     <tr>
@@ -73,10 +73,12 @@ $query_result_set=$stmt->get_result();
         <td><a href="view_post.php?id=<?php echo $row['id']; ?>"><?php echo $row['title']; ?></a></td>
         <td><?php echo $row['user']; ?></td>
         <td><?php echo $row['date']; ?></td>
+        <td><?php echo $row['post_view']; ?></td>
     </tr>
     <?php endwhile; ?>
 </table>
 </fieldset>
-<a href = 'write.php'>Write Posts</a>
+<a href = 'write.php'>Write Posts</a><br>
+<a href = "csrf_write.php">Write Post-CSRF APPLIED</a>
 </body>
 </html>
